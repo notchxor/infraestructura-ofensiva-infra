@@ -1,0 +1,30 @@
+---
+- name:               Install Dependencies
+  apt:
+    update_cache:     yes
+    cache_valid_time: 3600
+    name:             "{{ docker_debian_deps }}"
+    state:            present
+
+- name:               Add Docker's Apt Key
+  apt_key:
+    url:              https://download.docker.com/linux/debian/gpg
+    state:            present
+
+- name:               Add Docker's Repository
+  apt_repository:
+    repo:             "deb [arch=amd64] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
+    state:            present
+    filename:         docker-ce
+
+- name:               Install Docker CE
+  apt:
+    update_cache:     yes
+    cache_valid_time: 3600
+    name:             docker-ce
+    state:            present
+
+- name:               Install Docker-Compose
+  pip:
+    name:             docker-compose
+    state:            present

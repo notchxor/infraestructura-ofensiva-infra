@@ -1,0 +1,4 @@
+---
+- shell: "(socat TCP4-LISTEN:{{ port }},fork TCP4:{{ ip }}:{{ port }} >/dev/null 2>&1 &)"
+  async: 10
+  poll: 0

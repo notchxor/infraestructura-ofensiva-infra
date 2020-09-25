@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: payloads
+  namespace: c2
+  labels:
+    app: payloads
+spec:
+  ports:
+    - port: 80
+      name: payloads
+      targetPort: 80
+  selector:
+    app: payloads
+

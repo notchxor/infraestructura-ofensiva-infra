@@ -1,0 +1,20 @@
+---
+- name: pull
+  command: /usr/bin/env docker-compose pull 
+  args:
+    chdir: /srv/{{ service }}/
+
+- name: up
+  command: /usr/bin/env docker-compose up -d 
+  args:
+    chdir: /srv/{{ service }}/
+
+- name: prune
+  command: /usr/bin/env docker image prune -f
+  args:
+    chdir: /srv/{{ service }}/
+  register: output
+
+- name: debug
+  debug:
+    var: output

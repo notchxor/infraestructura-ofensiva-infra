@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: kali-sh
+  namespace: c2
+  labels:
+    app: kali-sh
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kali-sh
+  serviceName: kali-sh
+  template:
+    metadata:
+      labels:
+        app: kali-sh
+    spec:
+      containers:
+      - image: kalilinux/kali-rolling
+        name: kali-sh
+        imagePullPolicy: Always
+        command: ["/bin/bash"]
+        args: ["-c","tail -f /dev/null"]
+        ports:
+          - name: kali-sh-web
+            protocol: TCP
+            containerPort: 1337
+        volumeMounts:
+          - mountPath: "/kali.data"
+            name: kali-data
+          - mountPath: "/shared-pvc"
+            name: shared-storage
+      volumes:
+      - name: kali-data
+      - name: shared-storage
+        persistentVolumeClaim:
+          claimName: shared-pvc
+  volumeClaimTemplates:
+    - metadata:
+        name: kali-data
+        labels:
+          app: kali-sh
+      spec:
+        accessModes: [ "ReadWriteOnce"]
+        storageClassName: rook-ceph-block-x2
+        resources:
+          requests:
+            storage: "16Gi"
+
+

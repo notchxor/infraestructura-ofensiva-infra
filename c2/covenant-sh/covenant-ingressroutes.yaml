@@ -1,0 +1,33 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: cov-sh-http
+  namespace: c2
+spec:
+  entryPoints:
+    - web
+  routes:
+  - kind: Rule
+    match: Host(`notcobalt.xyz`)
+    services:
+    - kind: Service
+      name: cov-sh-web
+      port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: cov-sh-https
+  namespace: c2
+spec:
+  entryPoints:
+    - https
+  routes:
+  - kind: Rule
+    match: Host(`notcobalt.xyz`)
+    services:
+    - kind: Service
+      name: cov-sh-https
+      port: 443
+  tls:
+    secretName: notcobalt-tls

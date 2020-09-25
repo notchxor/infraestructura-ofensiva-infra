@@ -1,0 +1,5 @@
+- include: dnf.yml
+  when: ansible_distribution == "Fedora"
+
+- include: apt.yml
+  when: ansible_distribution == "Ubuntu"

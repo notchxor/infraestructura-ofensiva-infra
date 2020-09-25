@@ -1,0 +1,9 @@
+---
+# tasks file for docker-installer
+- name: Debian - Install Docker CE
+  import_tasks: debian.yml
+  when: ansible_facts['distribution']|lower == 'debian' and ansible_facts['distribution_major_version']|int >= 8
+
+- name: Ubuntu - Install Docker CE
+  import_tasks: ubuntu.yml
+  when: ansible_facts['distribution']|lower == 'ubuntu' and ansible_facts['distribution_major_version']|int >= 18

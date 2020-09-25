@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard
+  namespace: default
+  labels:
+    app: gophish
+spec:
+  ports:
+  - port: 3333
+    name: dashboard
+    targetPort: 3333
+  selector:
+    app: gophish

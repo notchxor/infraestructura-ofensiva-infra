@@ -1,0 +1,24 @@
+- hosts: redirector1
+  gather_facts: no
+  vars:
+    username: tomav
+    repo_name: docker-mailserver
+
+  tasks:
+
+  - name: install base packages
+    apt: pkg={{item}} state=present update_cache=yes cache_valid_time=604800
+    with_items:
+      - git
+      - tmux
+      - cerbot
+      - python3-certbot-apache
+
+  - name: Create and Install Cert Using {{ certbot_plugin }} Plugin
+    command: "certbot --apache -d ekoparty.xyz -m tu@mail.com --no-eff-email --agree-tos "
+
+
+  - name: Checkout The Code From Github Using Ansible.
+    git:
+     repo: 'https://github.com/{{ username }}/{{ repo_name }}.git'
+     dest: /root/docker-mailserver

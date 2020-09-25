@@ -1,0 +1,57 @@
+- name: Ensure a locale exists
+  locale_gen:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - es_AR.UTF-8
+    - en_US.UTF-8
+
+- name: cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+- name: upgrade
+  apt: upgrade=full
+- name: clean
+  apt: 
+    autoclean: yes
+- name: remove
+  apt:
+    autoremove: yes
+
+- name: install dependencies base with apt
+  apt: 
+    name: [  
+     htop,
+     telnet,
+     vim,
+     socat,
+     apt-transport-https,
+     ntp,
+     tmux,
+     zsh,
+     rsync,
+     iftop,
+     iotop,
+     bzip2,
+     screen,
+     ncdu,
+     dnsutils,
+     mc,
+     mlocate,
+     fail2ban,
+     wget,
+     curl,
+     pv,
+     ]
+    state: latest
+    
+- name: grml
+  get_url:
+    url: https://git.grml.org/f/grml-etc-core/etc/zsh/zshrc 
+    dest: /etc/skel/.zshrc
+    mode: '0440'
+
+- name: Set timezone to BSAS
+  timezone:
+    name: America/Argentina/Buenos_Aires

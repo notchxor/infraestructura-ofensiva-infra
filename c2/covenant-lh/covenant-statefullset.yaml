@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: covenant-lh
+  namespace: c2
+  labels:
+    app: covenant-lh
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: covenant-lh
+  serviceName: covenant-lh
+  template:
+    metadata:
+      labels:
+        app: covenant-lh
+    spec:
+      initContainers:
+      - name: init-covenant-data
+        image: kalilinux/kali-rolling
+        command: ["/bin/bash"]
+        args: ["-c","rm -rf /app/Data/* && apt update && apt install -y git && git clone --recurse-submodules https://github.com/cobbr/Covenant && cp -R  Covenant/Covenant/Data/* /app/Data"]
+        volumeMounts: 
+          - name: covenant-lh-data
+            mountPath: "/app/Data"
+      containers:
+      - image: 10.233.29.197:5000/covenant
+   #   - image: kalilinux/kali-rolling
+        name: covenant-lh
+        imagePullPolicy: Always
+        command: ["dotnet"]
+        args: ["/app/Covenant.dll"]
+        ports:
+          - name: cov-lh-web
+            protocol: TCP
+            containerPort: 80
+          - name: cov-lh-https
+            protocol: TCP
+            containerPort: 443
+        volumeMounts:
+          - mountPath: "/app/Data"
+            name: covenant-lh-data
+      volumes:
+      - name: covenant-lh-data
+  volumeClaimTemplates:
+    - metadata:
+        name: covenant-lh-data
+        labels:
+          app: covenant-lh
+      spec:
+        accessModes: [ "ReadWriteOnce"]
+        storageClassName: rook-ceph-block-x2
+        resources:
+          requests:
+            storage: "16Gi"
+
+

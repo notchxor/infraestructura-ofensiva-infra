@@ -1,0 +1,9 @@
+
+openssl pkcs12 -export -out certificate.pfx -inkey privkey.pem -in cert.pem -certfile chain.pem
+(passwod: ekoparty2020)
+
+your key file (mysite.com.key) will be privkey.pem
+your cert file (mysite.com.crt) will be cert.pem
+
+# para traefik
+ko create secret tls ekoparty-tls --key=tls.key --cert=tls.crt

@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: sliver-sh
+  namespace: c2
+  labels:
+    app: sliver-sh
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sliver-sh
+  serviceName: sliver-sh
+  template:
+    metadata:
+      labels:
+        app: sliver-sh
+    spec:
+      containers:
+      - image: 10.233.3.129:5000/sliver
+        name: sliver-sh
+        imagePullPolicy: Always
+        command: ["/bin/bash"]
+        args: ["-c","apt update && apt install -y tmux && tail -f /dev/null"]
+        ports:
+          - name: sliver-sh-web
+            protocol: TCP
+            containerPort: 80
+          - name: sliver-sh-udp
+            protocol: UDP
+            containerPort: 53
+          - name: sliver-sh-https
+            protocol: TCP
+            containerPort: 443
+        volumeMounts:
+          - mountPath: "/app/Data"
+            name: sliver-data
+          - mountPath: "/shared-storage"
+            name: shared-storage
+      volumes:
+      - name: sliver-data
+      - name: shared-storage
+        persistentVolumeClaim:
+          claimName: shared-pvc
+  volumeClaimTemplates:
+    - metadata:
+        name: sliver-data3
+        labels:
+          app: sliver-sh
+      spec:
+        accessModes: [ "ReadWriteOnce"]
+        storageClassName: rook-ceph-block-x2
+        resources:
+          requests:
+            storage: "16Gi"
+
+

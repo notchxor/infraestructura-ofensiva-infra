@@ -1,0 +1,4 @@
+---
+- import_tasks: install-with-package.yml
+- import_tasks: renew-cron.yml
+  when: certbot_auto_renew

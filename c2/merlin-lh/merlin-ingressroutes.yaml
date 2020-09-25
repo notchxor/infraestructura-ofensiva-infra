@@ -1,0 +1,33 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: merlin-lh-http
+  namespace: c2
+spec:
+  entryPoints:
+    - web
+  routes:
+  - kind: Rule
+    match: Host(`pwndemic.xyz`)
+    services:
+    - kind: Service
+      name: merlin-lh-web
+      port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: merlin-lh-https
+  namespace: c2
+spec:
+  entryPoints:
+    - https
+  routes:
+  - kind: Rule
+    match: Host(`pwndemic.xyz`)
+    services:
+    - kind: Service
+      name: merlin-lh-https
+      port: 443
+#  tls:
+#    secretName: pwndemic-tls

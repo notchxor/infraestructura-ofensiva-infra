@@ -1,0 +1,17 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: payload-https
+  namespace: c2
+spec:
+  entryPoints:
+    - https
+  routes:
+  - kind: Rule
+    match: Host(`minieko.xyz`)
+    services:
+    - kind: Service
+      name: payloads
+      port: 80
+  tls:
+    secretName: minieko-tls

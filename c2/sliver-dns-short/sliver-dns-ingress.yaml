@@ -1,0 +1,14 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteUDP
+metadata:
+  name: ingressrouteudp.crd
+  namespace: c2
+
+spec:
+  entryPoints:
+    - dns
+  routes:
+    - match: HostSNI(`*`)
+      services:
+        - name: sliver-sh-dns
+          port: 53

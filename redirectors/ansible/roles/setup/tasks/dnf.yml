@@ -1,0 +1,47 @@
+- name: upgrade all packages
+  dnf:
+    name: "*"
+    state: latest
+- name: remove
+  dnf:
+    autoremove: yes
+
+- name: install dependencies base with dnf
+  dnf: 
+    name: [  
+     htop,
+     nc,
+     vim,
+     nano,
+     ntp,
+     tmux,
+     zsh,
+     git,
+     rsync,
+     lsof,
+     iftop,
+     iotop,
+     bzip2,
+     ncdu,
+     dnsutils,
+     mc,
+     mlocate,
+     fail2ban,
+     wget,
+     curl,
+     pv,
+     tcpdump,
+     tree,
+     bat
+     ]
+    state: latest
+
+- name: grml
+  get_url:
+    url: https://git.grml.org/f/grml-etc-core/etc/zsh/zshrc
+    dest: /etc/skel/.zshrc
+    mode: '0440'
+
+- name: Set timezone to BSAS
+  timezone:
+    name: America/Argentina/Buenos_Aires

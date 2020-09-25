@@ -1,0 +1,9 @@
+- name: 
+  import_tasks: apk.yml
+  when: ansible_facts['os_family']|lower == 'alpine'
+- import_tasks: apt.yml
+  when: ansible_facts['os_family']|lower == 'debian'
+- import_tasks: docker-update.yml
+  when: service != 'discourse' and service is defined
+- import_tasks: discourse.yml
+  when: service == 'discourse' and service is defined

@@ -1,0 +1,94 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: default
+  name: traefik-ingress-controller
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  namespace: default
+  name: traefik
+  labels:
+    app: traefik
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: traefik
+  template:
+    metadata:
+      labels:
+        app: traefik
+    spec:
+      serviceAccountName: traefik-ingress-controller
+      volumes:
+        - name: data
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
+      containers:
+        - name: traefik
+          image: traefik:v2.2
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: tmp
+              mountPath: /tmp
+          args:
+            - --api.insecure=true
+            - --serverstransport.insecureskipverify=true
+            - --global.sendanonymoususage
+            - --serverstransport.insecureskipverify=true
+            - --providers.kubernetesingress
+            - --accesslog
+            - --entrypoints.web.address=:80
+            - --entrypoints.rev.address=:1337
+            - --entrypoints.https.Address=:443
+            - --entrypoints.dns.Address=:443/udp
+            - --providers.kubernetescrd
+            - --providers.kubernetesingress
+            - --certificatesresolvers.letsencrypt.acme.tlschallenge
+            - --certificatesresolvers.letsencrypt.acme.email=notchxor@gmail.com
+ #           - --certificatesresolvers.letsencrypt.acme.httpchallenge=true
+            - --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web
+            - --certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
+            - --certificatesresolvers.letsencrypt.acme.storage=/data/acme.json
+            - --certificatesresolvers.default.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
+          ports:
+            - name: web
+              containerPort: 80
+            - name: https
+              containerPort: 443
+            - name: admin
+              containerPort: 8080
+            - name: rev
+              containerPort: 1337
+            - name: dns
+              containerPort: 53
+---
+#kind: Deployment
+#apiVersion: apps/v1
+#metadata:
+#  namespace: default
+#  name: whoami
+#  labels:
+#    app: whoami
+#
+#spec:
+#  replicas: 2
+#  selector:
+#    matchLabels:
+#      app: whoami
+#  template:
+#    metadata:
+#      labels:
+#        app: whoami
+#    spec:
+#      containers:
+#        - name: whoami
+#          image: containous/whoami
+#          ports:
+#            - name: web
+#              containerPort: 80

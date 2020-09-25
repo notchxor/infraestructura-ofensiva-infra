@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: merlin-lh
+  namespace: c2
+  labels:
+    app: merlin-lh
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: merlin-lh
+  serviceName: merlin-lh
+  template:
+    metadata:
+      labels:
+        app: merlin-lh
+    spec:
+      containers:
+      - image: 10.233.3.129:5000/merlin
+        name: merlin-lh
+        imagePullPolicy: Always
+        command: ["/bin/bash"]
+        args: ["-c","tail -f /dev/null"]
+        ports:
+          - name: melrin-lh-web
+            protocol: TCP
+            containerPort: 80
+          - name: merlin-lh-https
+            protocol: TCP
+            containerPort: 443
+        volumeMounts:
+          - mountPath: "/app/Data"
+            name: merlin-lh-data
+          - mountPath: "/shared-pvc"
+            name: shared-storage
+      volumes:
+      - name: merlin-lh-data
+      - name: shared-storage
+        persistentVolumeClaim:
+          claimName: shared-pvc
+  volumeClaimTemplates:
+    - metadata:
+        name: merlin-lh-data
+        labels:
+          app: merlin-lh
+      spec:
+        accessModes: [ "ReadWriteOnce"]
+        storageClassName: rook-ceph-block-x2
+        resources:
+          requests:
+            storage: "16Gi"
+
+

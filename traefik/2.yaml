@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik-svc
+  annotations:
+    metallb.universe.tf/address-pool: public
+spec:
+  ports:
+    - protocol: TCP
+      name: web
+      port: 80
+    - protocol: TCP
+      name: https
+      port: 443
+    - protocol: TCP
+      name: rev
+      port: 1337
+  selector:
+    app: traefik
+  type: LoadBalancer
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik-svc-udp
+  annotations:
+    metallb.universe.tf/address-pool: public
+spec:
+  ports:
+    - protocol: UDP
+      name: dns
+      port: 53
+  selector:
+    app: traefik
+  type: LoadBalancer

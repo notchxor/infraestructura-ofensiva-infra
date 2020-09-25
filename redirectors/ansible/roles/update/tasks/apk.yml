@@ -1,0 +1,6 @@
+- name: cache
+  apk:
+    update_cache: yes
+- name: upgrade
+  apk:
+    upgrade: yes

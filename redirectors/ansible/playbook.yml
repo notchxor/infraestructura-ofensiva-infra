@@ -1,0 +1,14 @@
+---
+- hosts: all
+  become: true
+  vars:
+    ansible_user: root
+    socat_ip: [some-ip]
+    ansible_python_interpreter: /usr/bin/python3
+  roles:
+    - setup
+    - adduser
+    - docker-installer
+    - apache
+    - certbot
+    - socat_script

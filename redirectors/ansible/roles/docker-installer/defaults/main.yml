@@ -1,0 +1,17 @@
+---
+# vars file for docker-installer
+docker_debian_deps:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - gnupg2
+  - software-properties-common
+  - python3-pip
+
+docker_ubuntu_deps:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - gnupg-agent
+  - software-properties-common
+  - python3-pip

@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: gophish
+  namespace: default
+  labels:
+    app: gophish
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gophish
+  serviceName: gophish
+  template:
+    metadata:
+      labels:
+        app: gophish
+    spec:
+      containers:
+      - image: gophish/gophish
+        name: gophish
+        imagePullPolicy: Always
+        command: ["/bin/bash"]
+        args: ["-c","/opt/gophish/gophish"]
+        ports:
+          - name: dashboard
+            protocol: TCP
+            containerPort: 3333
+#          - name: cov-lh-https
+#            protocol: TCP
+#            containerPort: 443
+        volumeMounts:
+          - mountPath: "/app/Data"
+            name: gophish-data
+      volumes:
+      - name: gophish-data
+  volumeClaimTemplates:
+    - metadata:
+        name: gophish-data
+        labels:
+          app: gophish
+      spec:
+        accessModes: [ "ReadWriteOnce"]
+        storageClassName: rook-ceph-block-x2
+        resources:
+          requests:
+            storage: "1Gi"
+
+

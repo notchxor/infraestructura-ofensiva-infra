@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sliver-sh-web
+  namespace: c2
+  labels:
+    app: sliver-sh
+spec:
+  ports:
+  - port: 80
+    name: sliver-sh-web
+    targetPort: 80
+  selector:
+    app: silver-sh
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sliver-sh-https
+  namespace: c2
+  labels:
+    app: sliver-sh
+spec:
+  ports:
+  - port: 443
+    name: sliver-sh-https
+    targetPort: 443
+  selector:
+    app: sliver-sh
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sliver-sh-dns
+  namespace: c2
+  labels:
+    app: sliver-sh
+spec:
+  ports:
+  - port: 53
+    protocol: UDP
+    name: sliver-sh-dns
+    targetPort: 53
+  selector:
+    app: sliver-sh

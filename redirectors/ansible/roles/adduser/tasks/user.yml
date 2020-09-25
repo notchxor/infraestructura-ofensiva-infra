@@ -1,0 +1,20 @@
+  - name: Add user to sudo
+    lineinfile:
+      path: /etc/sudoers.d/"{{ user }}"
+      line: '"{{ user }}" ALL=(ALL) NOPASSWD: ALL'
+      state: present
+      mode: 0440
+      create: yes
+      validate: 'visudo -cf %s'
+  - name: Add Unix Admins users
+    user:
+      name: "{{ user }}"
+      create_home: yes
+      state: present
+      uid: 2004
+      shell: /bin/zsh
+  - name: Set authorized key 
+    authorized_key:
+      user: "{{ user }}"
+      state: present
+      key: "{{ lookup('file', '/home/{{ user }}/.ssh/id_rsa.pub') }}"

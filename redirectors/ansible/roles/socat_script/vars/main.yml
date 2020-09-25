@@ -1,0 +1,3 @@
+---
+ip: {{ socat_ip }}
+port: 4444

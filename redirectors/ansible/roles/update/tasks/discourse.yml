@@ -1,0 +1,23 @@
+- name: stop
+  command: ./launcher stop app
+  args:
+    chdir: /srv/{{ service }}/
+
+- name: rebuild
+  command: ./launcher rebuild app
+  args:
+    chdir: /srv/{{ service }}/
+
+- name: start
+  command: ./launcher start app
+  args:
+    chdir: /srv/{{ service }}/
+
+- name: prune
+  command: /usr/bin/env docker image prune -f  
+  args:
+    chdir: /srv/{{ service }}/
+  register: output
+
+- debug:
+    var: output

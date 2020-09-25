@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payloads
+  namespace: c2
+  labels:
+    app: payloads
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payloads
+  template:
+    metadata:
+       labels:
+         app: payloads
+    spec:
+      containers:
+      - image: nginx
+        ports:
+          - containerPort: 80
+            protocol: TCP
+            name: payloads
+        name: payloads
+        imagePullPolicy: Always
+        volumeMounts:
+          - mountPath: "/usr/share/nginx/html"
+            name: shared-storage
+      volumes:
+      - name: shared-storage
+        persistentVolumeClaim:
+          claimName: shared-pvc
+          

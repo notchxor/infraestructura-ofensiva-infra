@@ -1,0 +1,33 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: cov-lh-http
+  namespace: c2
+spec:
+  entryPoints:
+    - web
+  routes:
+  - kind: Rule
+    match: Host(`covenant-lh.xyz`)
+    services:
+    - kind: Service
+      name: cov-lh-web
+      port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: cov-lh-https
+  namespace: c2
+spec:
+  entryPoints:
+    - https
+  routes:
+  - kind: Rule
+    match: Host(`covenant-lh.xyz`)
+    services:
+    - kind: Service
+      name: cov-lh-https
+      port: 443
+  tls:
+    secretName: ekoparty-tls
